@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ELIOX OS - PROJETO FINALIZADO</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background: #000000;
+            overflow: hidden;
+            transition: background 1s;
+        }
+
+        .tela {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            position: relative;
+            padding-top: 20px;
+            background-color: #000;
+        }
+
+        /* ✅ CIRCULO FLUTUANTE NO CENTRO */
+        .circulo-flutuante {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 70vw;
+            height: 70vw;
+            max-width: 700px;
+            max-height: 700px;
+            border-radius: 50%;
+            border: 4px solid #00FFFF;
+            box-shadow: 
+                0 0 60px #00FFFF, 
+                inset 0 0 60px rgba(0,255,255,0.4);
+            animation: pulsar 3s infinite ease-in-out, flutuar 6s infinite ease-in-out alternate;
+            z-index: 9999;
+            pointer-events: none;
+        }
+
+        @keyframes pulsar { 
+            0%,100%{ transform: translate(-50%, -50%) scale(1); opacity: 0.9; }
+            50%{ transform: translate(-50%, -50%) scale(1.05); opacity: 1; }
+        }
+        @keyframes flutuar { 
+            0%{ transform: translate(-50%, -50%) translateY(0px); }
+            100%{ transform: translate(-50%, -50%) translateY(-20px); }
+        }
+
+        /* CABEÇALHO */
+        .header {
+            width: 90%;
+            text-align: center;
+            z-index: 20;
+            margin-bottom: 20px;
+        }
+
+        .titulo {
+            color: #FFFFFF;
+            font-size: 50px;
+            font-weight: bold;
+            text-shadow: 0 0 20px #00FFFF, 0 0 40px #00FFFF;
+            letter-spacing: 5px;
+        }
+
+        .subtitulo {
+            color: #FFFFFF;
+            font-size: 24px;
+            text-shadow: 0 0 10px #00FFFF;
+            margin-top: 10px;
+            opacity: 0.9;
+        }
+
+        /* MENU LATERAL DIREITO - EXATO COMO NA FOTO */
+        .menu-lateral {
+            position: absolute;
+            right: 30px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0,0,0,0.5);
+            border: 1px solid #00FFFF;
+            padding: 15px;
+            border-radius: 8px;
+            z-index: 20;
+            box-shadow: 0 0 15px rgba(0,255,255,0.3);
+        }
+
+        .item-menu {
+            color: #FFFFFF;
+            font-size: 16px;
+            padding: 8px;
+            text-shadow: 0 0 8px #00FFFF;
+            border-bottom: 1px solid rgba(0,255,255,0.3);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* TEXTO EM BAIXO */
+        .texto-rodape {
+            position: absolute;
+            bottom: 30px;
+            width: 90%;
+            color: #FFFFFF;
+            font-size: 14px;
+            text-shadow: 0 0 8px #00FFFF;
+            text-align: center;
+            z-index: 20;
+        }
+
+        /* ============================================== */
+        /* 🎨 CORES DE CADA MODO */
+        /* ============================================== */
+
+        /* 🔵 DEFAULT MODE - CIANO */
+        .modo-default .circulo-flutuante { border-color: #00FFFF; box-shadow: 0 0 60px #00FFFF, inset 0 0 60px rgba(0,255,255,0.4); }
+        .modo-default .titulo, .modo-default .subtitulo { text-shadow: 0 0 20px #00FFFF, 0 0 40px #00FFFF; }
+        .modo-default .menu-lateral { border-color: #00FFFF; box-shadow: 0 0 15px rgba(0,255,255,0.3); }
+        .modo-default .item-menu { text-shadow: 0 0 8px #00FFFF; border-bottom-color: rgba(0,255,255,0.3); }
+
+        /* 🟢 VISION MODE - VERDE */
+        .modo-visao .circulo-flutuante { border-color: #00FF00; box-shadow: 0 0 60px #00FF00, inset 0 0 60px rgba(0,255,0,0.4); }
+        .modo-visao .titulo, .modo-visao .subtitulo { text-shadow: 0 0 20px #00FF00, 0 0 40px #00FF00; }
+        .modo-visao .menu-lateral { border-color: #00FF00; box-shadow: 0 0 15px rgba(0,255,0,0.3); }
+        .modo-visao .item-menu { text-shadow: 0 0 8px #00FF00; border-bottom-color: rgba(0,255,0,0.3); }
+
+        /* 🟠 CLOUD MODE - LARANJA */
+        .modo-nuvem .circulo-flutuante { border-color: #FF9900; box-shadow: 0 0 60px #FF9900, inset 0 0 60px rgba(255,153,0,0.4); }
+        .modo-nuvem .titulo, .modo-nuvem .subtitulo { text-shadow: 0 0 20px #FF9900, 0 0 40px #FF9900; }
+        .modo-nuvem .menu-lateral { border-color: #FF9900; box-shadow: 0 0 15px rgba(255,153,0,0.3); }
+        .modo-nuvem .item-menu { text-shadow: 0 0 8px #FF9900; border-bottom-color: rgba(255,153,0,0.3); }
+
+        /* 🟣 EDITOR MODE - ROXO */
+        .modo-editor .circulo-flutuante { border-color: #FF00FF; box-shadow: 0 0 60px #FF00FF, inset 0 0 60px rgba(255,0,255,0.4); }
+        .modo-editor .titulo, .modo-editor .subtitulo { text-shadow: 0 0 20px #FF00FF, 0 0 40px #FF00FF; }
+        .modo-editor .menu-lateral { border-color: #FF00FF; box-shadow: 0 0 15px rgba(255,0,255,0.3); }
+        .modo-editor .item-menu { text-shadow: 0 0 8px #FF00FF; border-bottom-color: rgba(255,0,255,0.3); }
+
+        /* 🟡 PROCESSING MODE - AMARELO */
+        .modo-processando .circulo-flutuante { border-color: #FFCC00; box-shadow: 0 0 60px #FFCC00, inset 0 0 60px rgba(255,204,0,0.4); }
+        .modo-processando .titulo, .modo-processando .subtitulo { text-shadow: 0 0 20px #FFCC00, 0 0 40px #FFCC00; }
+        .modo-processando .menu-lateral { border-color: #FFCC00; box-shadow: 0 0 15px rgba(255,204,0,0.3); }
+        .modo-processando .item-menu { text-shadow: 0 0 8px #FFCC00; border-bottom-color: rgba(255,204,0,0.3); }
+
+        /* 🔴 DANGER MODE - VERMELHO */
+        .modo-perigo .circulo-flutuante { border-color: #FF0000; box-shadow: 0 0 60px #FF0000, inset 0 0 60px rgba(255,0,0,0.4); }
+        .modo-perigo .titulo, .modo-perigo .subtitulo { text-shadow: 0 0 20px #FF0000, 0 0 40px #FF0000; }
+        .modo-perigo .menu-lateral { border-color: #FF0000; box-shadow: 0 0 15px rgba(255,0,0,0.3); }
+        .modo-perigo .item-menu { text-shadow: 0 0 8px #FF0000; border-bottom-color: rgba(255,0,0,0.3); }
+
+    </style>
+</head>
+<body class="modo-default">
+
+<div class="tela">
+
+    <!-- ✅ CIRCULO FLUTUANTE -->
+    <div class="circulo-flutuante"></div>
+
+    <!-- CABEÇALHO -->
+    <div class="header">
+        <div class="titulo">ELIOX OS</div>
+        <div class="subtitulo" id="nomeModo">Default Mode</div>
+    </div>
+
+    <!-- MENU LATERAL -->
+    <div class="menu-lateral">
+        <div class="item-menu">🏠 Menu</div>
+        <div class="item-menu">🔒 <span id="codigoCor">#00FFFF</span></div>
+        <div class="item-menu">📄 <span id="descricao">Default</span></div>
+        <div class="item-menu">⚙️ <span id="codigoCor2">#00FFFF</span></div>
+        <div class="item-menu">🔧 <span id="funcao">Default</span></div>
+    </div>
+
+    <!-- TEXTO EM BAIXO -->
+    <div class="texto-rodape">
+        PROJETO FINALIZADO | SISTEMA ESTÁVEL | ELIOX OS
+    </div>
+
+</div>
+
+<script>
+    function falar(texto) {
+        let u = new SpeechSynthesisUtterance(texto);
+        u.lang = 'pt-BR';
+        u.rate = 0.9;
+        u.pitch = 0.7;
+        window.speechSynthesis.speak(u);
+    }
+
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    let recognition;
+
+    if (SpeechRecognition) {
+        recognition = new SpeechRecognition();
+        recognition.lang = 'pt-BR';
+        recognition.interimResults = false;
+        recognition.maxAlternatives = 1;
+
+        recognition.onresult = function(event) {
+            let comando = event.results[0][0].transcript.toLowerCase();
+            executarComando(comando);
+            setTimeout(() => { recognition.start(); }, 1500);
+        };
+
+        recognition.onerror = function() {
+            setTimeout(() => { recognition.start(); }, 1000);
+        }
+    }
+
+    function executarComando(comando) {
+        if(comando.includes("visao") || comando.includes("camera")) {
+            ativarModo("modo-visao", "Vision Mode", "#00FF00", "Security & Vision");
+            falar("Modo visão ativado. Segurança máxima.");
+        } 
+        else if(comando.includes("nuvem") || comando.includes("cloud")) {
+            ativarModo("modo-nuvem", "Cloud Mode", "#FF9900", "Data & Storage");
+            falar("Conectado à nuvem. Dados seguros.");
+        }
+        else if(comando.includes("editor") || comando.includes("criar")) {
+            ativarModo("modo-editor", "Editor Mode", "#FF00FF", "Creation & Editing");
+            falar("Modo editor ativado. Liberdade criativa.");
+        }
+        else if(comando.includes("processar") || comando.includes("carregar")) {
+            ativarModo("modo-processando", "Processing Mode", "#FFCC00", "System Processing");
+            falar("Processando dados. Aguarde.");
+        }
+        else if(comando.includes("perigo") || comando.includes("alerta")) {
+            ativarModo("modo-perigo", "Danger Mode", "#FF0000", "Alert System");
+            falar("ALERTA MÁXIMO! Sistema de defesa ativado.");
+        }
+        else if(comando.includes("padrao") || comando.includes("default")) {
+            ativarModo("modo-default", "Default Mode", "#00FFFF", "System Default");
+            falar("Modo padrão ativado.");
+        }
+    }
+
+    function ativarModo(classe, nomeModo, codigoHex, descricao) {
+        document.body.className = '';
+        document.body.classList.add(classe);
+        
+        document.getElementById('nomeModo').innerText = nomeModo;
+        document.getElementById('codigoCor').innerText = codigoHex;
+        document.getElementById('codigoCor2').innerText = codigoHex;
+        document.getElementById('descricao').innerText = descricao;
+        document.getElementById('funcao').innerText = descricao;
+    }
+
+    window.onload = function() {
+        falar("Sistema Eliox OS inicializado. Projeto finalizado com sucesso.");
+        if(recognition) recognition.start();
+    }
+
+</script>
+
+</body>
+</html>
